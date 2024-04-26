@@ -1,13 +1,11 @@
 import React from 'react';
-import './App.css';
-import {HashRouter} from "react-router-dom";
+import Garage from "src/pages/garage/Garage";
 
 function App() {
   return (
-      <HashRouter>
         <div className="App">
+            <Garage/>
         </div>
-      </HashRouter>
 
   );
 }

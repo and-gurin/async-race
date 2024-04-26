@@ -1,5 +1,5 @@
 import React from 'react';
-import style from "./Button.module.scss"
+import style from "src/components/button/Button.module.css"
 
 export type ButtonPropsType = {
     title: string,

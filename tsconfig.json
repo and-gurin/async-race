@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -20,14 +20,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "paths": {
-      "@*": [
-        "src/*"
-      ]
-    }
+    "paths": {"@/*": ["./src/*"],}
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-  ]
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
