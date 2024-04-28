@@ -1,17 +1,28 @@
 import React from 'react';
-import Button from "src/components/button/Button";
+import CustomButton from '../button/CustomButton';
 
-const CarItem = ({name, color}: {name: string, color: string}) => {
+const CarItem = ({name, color, onClickSelect, onClickRemove }: {
+    name: string,
+    color: string,
+    onClickSelect: () => void,
+    onClickRemove: () => void,
+    //onClickStart: () => void,
+    //onClickStop: () => void,
+}) => {
     return (
         <div >
             <div>
-                <Button title={'Select'} onClick={() => {}}/>
-                <Button title={'Remove'} onClick={() => {}}/>
+                <CustomButton onClick={onClickSelect}>
+                    Select
+                </CustomButton>
+                <CustomButton onClick={onClickRemove}>
+                    Remove
+                </CustomButton>
             </div>
-            <div>
-                <Button title={'A'} onClick={() => {}}/>
-                <Button title={'B'} onClick={() => {}}/>
-            </div>
+            {/*<div>*/}
+            {/*    <Button title={'A'} onClick={onClickStart}/>*/}
+            {/*    <Button title={'B'} onClick={onClickStop}/>*/}
+            {/*</div>*/}
             <div>
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"  x="0px" y="0px"
                      viewBox="0 0 512 512" height="50" fill={color} xmlSpace="preserve">

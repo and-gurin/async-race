@@ -1,7 +1,7 @@
 import {Navigate, Route, Routes} from 'react-router-dom';
-import Garage from '@/pages/garage/Garage';
-import Winners from '@/pages/winners/Winners';
-import Error404 from '@/pages/404/Error404';
+import Garage from './pages/garage/Garage';
+import Winners from './pages/winners/Winners';
+import Error404 from './pages/404/Error404';
 
 export const PATH = {
     GARAGE: '/garage',

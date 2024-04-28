@@ -1,12 +1,11 @@
 import React from 'react';
-import Garage from "src/pages/garage/Garage";
+import Pages from './Pages';
 
 function App() {
   return (
-        <div className="App">
-            <Garage/>
-        </div>
-
+      <>
+          <Pages/>
+      </>
   );
 }
 

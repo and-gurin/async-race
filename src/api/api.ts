@@ -23,7 +23,7 @@ export const AsyncRaceAPI = {
             .then((data) => data)
             .catch((err) => new Error(err));
     },
-    updateCar(id: number, data: CarPropsType) {
+    updateCar(id: number | undefined, data: { name: string; color: string }) {
         return fetch(`${this.baseUrl}/garage/${id}`, {
             method: 'PUT',
             headers: {
@@ -48,8 +48,8 @@ export const AsyncRaceAPI = {
             .then((data) => data)
             .catch((err) => new Error(err));
     },
-    removeCar(id: number) {
-        fetch(`${this.baseUrl}/garage/${id}`, {
+    removeCar(id: number | undefined) {
+        return  fetch(`${this.baseUrl}/garage/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

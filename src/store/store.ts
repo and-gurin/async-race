@@ -1,5 +1,5 @@
 import {Action, combineReducers, configureStore, ThunkDispatch} from '@reduxjs/toolkit';
-import {garageReducer} from 'src/features/garage/garageSlice';
+import {garageReducer} from '../features/garage/garageSlice';
 
 const rootReducer = combineReducers({
     garage: garageReducer,
