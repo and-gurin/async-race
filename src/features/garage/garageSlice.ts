@@ -1,18 +1,20 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncRaceAPI, CarPropsType} from '../../api/api';
-import generateName from "../../components/generate/generateName";
-import generateColor from "../../components/generate/generateColor";
-
-const initialState: CarPropsType[] = await AsyncRaceAPI.getCars();
+import generateName from '../../components/generate/generateName';
+import generateColor from '../../components/generate/generateColor';
 
 export const garageSlice = createSlice({
         name: 'garage',
-        initialState,
+        initialState: {
+            cars: [] as CarPropsType[],
+            carsPage: [] as CarPropsType[],
+            currentPage: 1,
+        },
         reducers: {
             createCar: (state, action: PayloadAction<{
                 name: string, color: string
             }>) => {
-                state.push(action.payload);
+                state.cars.push(action.payload);
             },
             updateCar: (state, action: PayloadAction<{
                 id: number | undefined,
@@ -21,7 +23,7 @@ export const garageSlice = createSlice({
                     color: string
                 }
             }>) => {
-                const selectedCar = state.find(car =>
+                const selectedCar = state.carsPage.find(car =>
                     car.id === action.payload.id);
                 if (selectedCar) {
                     selectedCar.name = action.payload.carData.name;
@@ -29,13 +31,22 @@ export const garageSlice = createSlice({
                 }
             },
             deleteCar: (state, action: PayloadAction<{
-                id: number | undefined,
+                id: number | undefined
             }>) => {
-                const selectedCar = state.find(car =>
-                    car.id === action.payload.id);
-                if (selectedCar) {
-                    state.unshift(selectedCar)
-                }
+                const carId = action.payload.id;
+                state.carsPage = state.carsPage.filter(car => car.id !== carId);
+                state.cars = state.cars.filter(car => car.id !== carId);
+            },
+            fetchCarsPage: (state, action: PayloadAction<{
+                cars: CarPropsType[], page: number,
+            }>) => {
+                state.carsPage = action.payload.cars;
+                state.currentPage = action.payload.page;
+            },
+            fetchAllCars: (state, action: PayloadAction<{
+                cars: CarPropsType[],
+            }>) => {
+                state.cars = action.payload.cars;
             },
         }
     }
@@ -79,6 +90,29 @@ export const deleteCarAsync = (id: number | undefined) => async (dispatch: any) 
         console.error(error);
     }
 };
+export const fetchCarsPageAsync = (page: number) => async (dispatch: any) => {
+    try {
+        const cars: CarPropsType[] = await AsyncRaceAPI.getCarsPage(page);
+        dispatch(fetchCarsPage({cars, page}));
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const fetchAllCarsAsync = () => async (dispatch: any) => {
+    try {
+        const cars: CarPropsType[] = await AsyncRaceAPI.getCars();
+        dispatch(fetchAllCars({cars}));
+    } catch (error) {
+        console.error(error);
+    }
+};
 
-export const {createCar, updateCar, deleteCar} = garageSlice.actions;
+
+export const {
+    createCar,
+    updateCar,
+    deleteCar,
+    fetchCarsPage,
+    fetchAllCars
+} = garageSlice.actions;
 export const garageReducer = garageSlice.reducer

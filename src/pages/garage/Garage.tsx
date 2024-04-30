@@ -1,9 +1,13 @@
 import React, {ChangeEvent, useState} from 'react';
 import style from '../garage/garage.module.css'
-import {useAppDispatch, useAppSelector} from '../../hooks/useAppDispatch';
-import {createCarAsync, deleteCarAsync, generateCarsAsync, updateCarAsync} from '../../features/garage/garageSlice';
-import CarItem from '../../components/car-item/Car-item';
+import {useAppDispatch} from '../../hooks/useAppDispatch';
+import {
+    createCarAsync,
+    generateCarsAsync,
+    updateCarAsync
+} from '../../features/garage/garageSlice';
 import CustomButton from '../../components/button/CustomButton';
+import GaragePagination from '../../components/garage-pagination/GaragePagination';
 
 
 const Garage = () => {
@@ -26,6 +30,7 @@ const Garage = () => {
             console.error('Error creating car:', error);
         }
         setNewName('')
+        setNewColor('')
     }
     const onChangeUpdateColor = (e: ChangeEvent<HTMLInputElement>) => {
         setUpdateColor(e.currentTarget.value)
@@ -43,19 +48,6 @@ const Garage = () => {
         setUpdateName('')
         setUpdateColor('')
     }
-    const onClickSelectCar = (id: number | undefined, name: string, color: string) => {
-        setSelectedCarId(id)
-        setUpdateName(name)
-        setUpdateColor(color)
-    }
-    const onClickRemoveCar = async (id: number | undefined) => {
-        try {
-            await dispatch(deleteCarAsync(id));
-            console.log('Car deleted successfully!');
-        } catch (error) {
-            console.error('Error deleting car:', error);
-        }
-    }
     const onClickGenerateCars = async () => {
         try {
             await dispatch(generateCarsAsync());
@@ -67,7 +59,6 @@ const Garage = () => {
         setNewColor('')
     }
     const dispatch = useAppDispatch();
-    const cars = useAppSelector(state => state.garage);
 
     return (
         <section className={style.garage}>
@@ -109,18 +100,10 @@ const Garage = () => {
                 </CustomButton>
             </header>
             <div>
-                {cars.map(car => {
-                    return (
-                        <CarItem
-                            onClickRemove={() => onClickRemoveCar(car.id)}
-                            //onClick={() =>onClickSelectCar(car.id)}
-                            key={car.color}
-                            name={car.name}
-                            onClickSelect={() => onClickSelectCar(car.id, car.name, car.color)}
-                            color={car.color}/>
-
-                    )
-                })}
+                <GaragePagination
+                    setSelectedCarId={setSelectedCarId}
+                    setUpdateName={setUpdateName}
+                    setUpdateColor={setUpdateColor}/>
             </div>
         </section>
     );
