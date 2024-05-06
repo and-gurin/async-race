@@ -1,8 +1,10 @@
 import {Action, combineReducers, configureStore, ThunkDispatch} from '@reduxjs/toolkit';
 import {garageReducer} from '../features/garage/garageSlice';
+import {winnersReducer} from "../features/winners/winnersSlice";
 
 const rootReducer = combineReducers({
     garage: garageReducer,
+    winners: winnersReducer,
 });
 
 export const store = configureStore({

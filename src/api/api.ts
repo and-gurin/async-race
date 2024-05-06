@@ -2,6 +2,8 @@ export type CarPropsType = {
     name: string;
     color: string;
     id?: number;
+    bestTime?: number;
+    wins?: number
 }
 export const AsyncRaceAPI = {
     baseUrl: 'http://localhost:3000',
@@ -32,7 +34,7 @@ export const AsyncRaceAPI = {
             body: JSON.stringify(data)
         });
     },
-    startOrStopCar(id: number, status: string) {
+    startStopEngine(id: number | undefined, status: string) {
         return fetch(`${this.baseUrl}/engine?id=${id}&status=${status}`, {
             method: 'PATCH',
         })
@@ -40,13 +42,21 @@ export const AsyncRaceAPI = {
             .then((data) => data)
             .catch((err) => new Error(err));
     },
-    switchCar(id: number, status: string) {
+    switchCarDrive(id: number | undefined, status: string) {
         return fetch(`${this.baseUrl}/engine?id=${id}&status=${status}`, {
             method: 'PATCH',
         })
-            .then((response) => response.json())
-            .then((data) => data)
-            .catch((err) => new Error(err));
+            .then(response => {
+                if (response.status === 500) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => data)
+            .catch(err => {
+                console.error(err);
+                throw new Error(err);
+            })
     },
     removeCar(id: number | undefined) {
         return  fetch(`${this.baseUrl}/garage/${id}`, {

@@ -9,7 +9,6 @@ import {
 import CustomButton from '../../components/button/CustomButton';
 import GaragePagination from '../../components/garage-pagination/GaragePagination';
 
-
 const Garage = () => {
     const [newColor, setNewColor] = useState('');
     const [newName, setNewName] = useState('');
@@ -63,12 +62,6 @@ const Garage = () => {
     return (
         <section className={style.garage}>
             <header className={style.garage__header}>
-                <div className={style.garage__buttons}>
-                    <CustomButton title={'Race'} onClick={() => {
-                    }}/>
-                    <CustomButton title={'Reset'} onClick={() => {
-                    }}/>
-                </div>
                 <div className={style.garage__buttons}>
                     <input value={newName}
                            onChange={onChangeNewName}

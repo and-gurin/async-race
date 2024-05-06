@@ -1,16 +1,116 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import CustomButton from '../button/CustomButton';
+import CarIcon from '../../components/icons/Car-icon';
+import {AsyncRaceAPI} from '../../api/api';
+import {useAppDispatch} from '../../hooks/useAppDispatch';
+import {clearCurrentRaceParticipants, createCurrentRaceParticipants} from '../../features/winners/winnersSlice';
 
-const CarItem = ({name, color, onClickSelect, onClickRemove }: {
+const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStoppedStatus}: {
     name: string,
     color: string,
     onClickSelect: () => void,
     onClickRemove: () => void,
-    //onClickStart: () => void,
-    //onClickStop: () => void,
+    carId: number | undefined,
+    startedStoppedStatus: 'started' | 'stopped' | ''
 }) => {
+
+    const [currentPosition, setCurrentPosition] = useState(0);
+    const [animationId, setAnimationId] = useState<number | null>(null);
+    const carRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const stopAnimationFlag = useRef(false);
+
+    const dispatch = useAppDispatch();
+
+    const startAnimation = (raceTime: number) => {
+        stopAnimationFlag.current = false;
+        let position = currentPosition;
+        const moveCar = () => {
+            position += raceTime;
+            if (!stopAnimationFlag.current && carRef.current) {
+                //const containerWidth = containerRef.current.offsetWidth;
+                //const carWidth = carRef.current.offsetWidth;
+                if (position <= window.innerWidth) {
+                    carRef.current.style.left = `${position}px`;
+                    setCurrentPosition(position);
+                } else {
+                    cancelAnimationFrame(animationId!);
+                    setAnimationId(null);
+                }
+                setAnimationId(requestAnimationFrame(moveCar));
+            }
+        };
+        if (!animationId) {
+            setAnimationId(requestAnimationFrame(moveCar));
+        }
+    };
+
+
+    // const startAnimation = (raceTime: number,) => {
+    //     if (animationId === null) {
+    //         let position = currentPosition;
+    //         const moveCar = () => {
+    //             position += raceTime;
+    //             if (carRef.current && position <= window.innerWidth) {
+    //                 carRef.current.style.left = position + 'px';
+    //                 const id = requestAnimationFrame(moveCar);
+    //                 setAnimationId(id);
+    //             } else {
+    //                 cancelAnimationFrame(animationId!);
+    //                 setCurrentPosition(0)
+    //             }
+    //         };
+    //         moveCar();
+    //     }
+    // };
+    const onClickStartCar = async () => {
+        try {
+            const raceData = await AsyncRaceAPI.startStopEngine(carId, 'started');
+            const raceTime = Math.round(raceData.distance / raceData.velocity / 10) / 100;
+            dispatch(createCurrentRaceParticipants({id: carId, color: color, name: name, bestTime: raceTime}))
+            console.log(raceTime, carId);
+            startAnimation(raceTime);
+
+            await AsyncRaceAPI.switchCarDrive(carId, 'drive');
+        }
+        catch (error) {
+            stopCar()
+            console.error(error.message);
+        }
+    }
+    const stopCar = async () => {
+        await AsyncRaceAPI.startStopEngine(carId, 'stopped');
+        stopAnimationFlag.current = true;
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            setAnimationId(null);
+            setCurrentPosition(0);
+            if (carRef.current) {
+                carRef.current.style.left = '0px';
+            }
+        }
+    };
+    // const stopCar = async () => {
+    //     await AsyncRaceAPI.startStopEngine(carId, 'stopped');
+    //     cancelAnimationFrame(animationId!);
+    //     setAnimationId(null);
+    //     setCurrentPosition(0)
+    //     if (carRef.current) {
+    //         carRef.current.style.left = '0px';
+    //     }
+    // };
+
+    useEffect(() => {
+        if (startedStoppedStatus === 'started') {
+            onClickStartCar()
+        } else if (startedStoppedStatus === 'stopped') {
+            stopCar()
+            dispatch(clearCurrentRaceParticipants())
+        }
+    }, [startedStoppedStatus])
+
     return (
-        <div >
+        <div>
             <div>
                 <CustomButton onClick={onClickSelect}>
                     Select
@@ -19,33 +119,21 @@ const CarItem = ({name, color, onClickSelect, onClickRemove }: {
                     Remove
                 </CustomButton>
             </div>
-            {/*<div>*/}
-            {/*    <Button title={'A'} onClick={onClickStart}/>*/}
-            {/*    <Button title={'B'} onClick={onClickStop}/>*/}
-            {/*</div>*/}
-            <div>
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"  x="0px" y="0px"
-                     viewBox="0 0 512 512" height="50" fill={color} xmlSpace="preserve">
-              <g><g><g>
-                <path d="M102.4,315.734c-9.421,0-17.067,7.637-17.067,17.067c0,9.421,7.646,17.067,17.067,17.067
-                  c9.421,0,17.067-7.646,17.067-17.067C119.467,323.372,111.821,315.734,102.4,315.734z"/>
-                <path d="M409.6,315.734c-9.421,0-17.067,7.637-17.067,17.067c0,9.421,7.646,17.067,17.067,17.067
-                  c9.421,0,17.067-7.646,17.067-17.067C426.667,323.372,419.021,315.734,409.6,315.734z"/>
-                <path d="M469.333,264.534H512v-23.842c0-15.087-12.271-27.358-27.358-27.358h-80.043l-91.366-91.366
-                  c-3.337-3.337-8.73-3.337-12.066,0c-3.336,3.337-3.336,8.73,0,12.066l79.3,79.3h-81.801v-25.6c0-4.719-3.814-8.533-8.533-8.533
-                  s-8.533,3.814-8.533,8.533v25.6h-59.733v-25.6c0-4.719-3.814-8.533-8.533-8.533c-4.719,0-8.533,3.814-8.533,8.533v25.6h-59.733
-                  v-34.133c0-14.114-11.486-25.6-25.6-25.6s-25.6,11.486-25.6,25.6v34.133H27.358C12.271,213.334,0,225.605,0,240.692v23.842
-                  h42.667c4.719,0,8.533,3.814,8.533,8.533s-3.814,8.533-8.533,8.533H0v32.375c0,15.087,12.271,27.358,27.358,27.358h15.992
-                  c4.164,28.894,29.022,51.2,59.051,51.2s54.886-22.306,59.051-51.2h189.099c4.164,28.894,29.022,51.2,59.051,51.2
-                  s54.886-22.306,59.051-51.2h15.991c15.087,0,27.358-12.271,27.358-27.358v-32.375h-42.667c-4.719,0-8.533-3.814-8.533-8.533
-                  S464.614,264.534,469.333,264.534z M110.933,179.201c0-4.71,3.823-8.533,8.533-8.533s8.533,3.823,8.533,8.533v34.133h-17.067
-                  V179.201z M102.4,375.468c-23.526,0-42.667-19.14-42.667-42.667c0-23.526,19.14-42.667,42.667-42.667
-                  c23.526,0,42.667,19.14,42.667,42.667C145.067,356.327,125.926,375.468,102.4,375.468z M307.2,281.601
-                  c0,4.719-3.814,8.533-8.533,8.533s-8.533-3.814-8.533-8.533v-8.533H256c-4.719,0-8.533-3.814-8.533-8.533
-                  s3.814-8.533,8.533-8.533h42.667c4.719,0,8.533,3.814,8.533,8.533V281.601z M409.6,375.468c-23.526,0-42.667-19.14-42.667-42.667
-                  c0-23.526,19.14-42.667,42.667-42.667c23.526,0,42.667,19.14,42.667,42.667C452.267,356.327,433.126,375.468,409.6,375.468z"/>
-              </g></g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
-            </svg>
+            <CustomButton onClick={onClickStartCar}>
+                A
+            </CustomButton>
+            <CustomButton onClick={stopCar}>
+                B
+            </CustomButton>
+            <div ref={containerRef}
+                 style={{position: 'relative', width: '500px', height: '50px', border: '1px solid black'}}>
+                <div ref={carRef} style={{
+                    position: 'absolute',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                }}>
+                    <CarIcon color={color}/>
+                </div>
             </div>
             <span>{name}</span>
         </div>

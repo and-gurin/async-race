@@ -1,20 +1,23 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks/useAppDispatch';
 import {fetchAllCarsAsync, fetchCarsPageAsync} from '../../features/garage/garageSlice';
 import CarItem from '../../components/car-item/Car-item';
-import {deleteCarAsync} from "../../features/garage/garageSlice";
+import {deleteCarAsync} from '../../features/garage/garageSlice';
+import CustomButton from '../../components/button/CustomButton';
 
 const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor}: {
     setSelectedCarId: (id: number | undefined) => void,
     setUpdateName: (name: string) => void,
     setUpdateColor: (color: string) => void,
 }) => {
+    const [startedStoppedStatus, setStartedStoppedStatus] = useState<'' | 'started' | 'stopped'>('');
     const dispatch = useAppDispatch();
     const {
         carsPage,
         currentPage,
         cars
     } = useAppSelector(state => state.garage);
+
     const onClickPageChange = async (page: number) => {
         try {
             await dispatch(fetchCarsPageAsync(page));
@@ -46,10 +49,21 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor}: {
     return (
         <div>
             <div>
+                <CustomButton onClick={() => setStartedStoppedStatus('started')}>
+                    Race
+                </CustomButton>
+                <CustomButton onClick={() => setStartedStoppedStatus('stopped')}>
+                    Reset
+                </CustomButton>
+            </div>
+            <div>
                 {carsPage.map(car => {
                     return (
+
                         <CarItem
                             key={car.color}
+                            startedStoppedStatus={startedStoppedStatus}
+                            carId={car.id}
                             onClickRemove={() => onClickRemoveCar(car.id)}
                             onClickSelect={() => onClickSelectCar(car.id, car.name, car.color)}
                             name={car.name}
@@ -60,7 +74,7 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor}: {
             <div>
                 <button disabled={currentPage === 1} onClick={() => onClickPageChange(currentPage - 1)}>Previous</button>
                 <span>Page {currentPage}</span>
-                <button onClick={() => onClickPageChange(currentPage + 1)}>Next</button>
+                <button disabled={currentPage >= Math.ceil(cars.length / 7)} onClick={() => onClickPageChange(currentPage + 1)}>Next</button>
             </div>
             <div>{cars.length}</div>
         </div>
