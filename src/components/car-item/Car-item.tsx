@@ -22,15 +22,19 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
 
     const dispatch = useAppDispatch();
 
-    const startAnimation = (raceTime: number) => {
+    const startAnimation = (velosity: number) => {
+        //const animationDuration = raceTime*1000;
+        //const animationStartTime = performance.now();
         stopAnimationFlag.current = false;
         let position = currentPosition;
         const moveCar = () => {
-            position += raceTime;
+            //const elapsedTime = performance.now() - animationStartTime;
+            //const progress = elapsedTime / animationDuration;
+            position += velosity/30;
             if (!stopAnimationFlag.current && carRef.current) {
                 //const containerWidth = containerRef.current.offsetWidth;
                 //const carWidth = carRef.current.offsetWidth;
-                if (position <= window.innerWidth) {
+                if (position <= window.innerWidth - 100) {
                     carRef.current.style.left = `${position}px`;
                     setCurrentPosition(position);
                 } else {
@@ -68,14 +72,13 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
             const raceData = await AsyncRaceAPI.startStopEngine(carId, 'started');
             const raceTime = Math.round(raceData.distance / raceData.velocity / 10) / 100;
             dispatch(createCurrentRaceParticipants({id: carId, color: color, name: name, bestTime: raceTime}))
-            console.log(raceTime, carId);
-            startAnimation(raceTime);
+            console.log(raceData.velocity, raceTime, carId);
+            startAnimation(raceData.velocity);
 
             await AsyncRaceAPI.switchCarDrive(carId, 'drive');
         }
         catch (error) {
             stopCar()
-            console.error(error.message);
         }
     }
     const stopCar = async () => {
@@ -105,7 +108,6 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
             onClickStartCar()
         } else if (startedStoppedStatus === 'stopped') {
             stopCar()
-            dispatch(clearCurrentRaceParticipants())
         }
     }, [startedStoppedStatus])
 

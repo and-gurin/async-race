@@ -2,16 +2,12 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {CarPropsType} from '../../api/api';
 import { current } from '@reduxjs/toolkit';
 
-export type BestTimePropsType = {
-    id: number;
-    bestTime: number;
-}
-
 export const winnersSlice = createSlice({
         name: 'winners',
         initialState: {
             currentRace: [] as CarPropsType[],
-            currentBestTime: [] as BestTimePropsType[],
+            currentBestTime: {} as CarPropsType,
+            currentWorstTime: {} as CarPropsType,
 
         },
         reducers: {
@@ -21,9 +17,17 @@ export const winnersSlice = createSlice({
                 state.currentRace.push(action.payload);
                 console.log(current(state));
             },
+            checkCurrentBestTime: (state) => {
+                const sort = state.currentRace.sort((a, b) => {
+                    return a.bestTime! - b.bestTime!
+                });
+                state.currentBestTime = sort[0]
+                state.currentWorstTime = sort[state.currentRace.length - 1]
+                console.log(current(state));
+            },
             clearCurrentRaceParticipants: (state) => {
                 state.currentRace = [];
-                console.log(current(state));
+
             },
 
         }
@@ -31,6 +35,8 @@ export const winnersSlice = createSlice({
 )
 
 export const {
-    createCurrentRaceParticipants, clearCurrentRaceParticipants
+    createCurrentRaceParticipants,
+    clearCurrentRaceParticipants,
+    checkCurrentBestTime
 } = winnersSlice.actions;
 export const winnersReducer = winnersSlice.reducer

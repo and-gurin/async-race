@@ -54,7 +54,6 @@ export const AsyncRaceAPI = {
             })
             .then(data => data)
             .catch(err => {
-                console.error(err);
                 throw new Error(err);
             })
     },

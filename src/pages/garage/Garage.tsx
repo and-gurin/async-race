@@ -8,13 +8,16 @@ import {
 } from '../../features/garage/garageSlice';
 import CustomButton from '../../components/button/CustomButton';
 import GaragePagination from '../../components/garage-pagination/GaragePagination';
+import PopUp from '../../components/popup/Popup';
 
 const Garage = () => {
     const [newColor, setNewColor] = useState('');
     const [newName, setNewName] = useState('');
     const [updateColor, setUpdateColor] = useState('');
     const [updateName, setUpdateName] = useState('');
-    const [selectedCarId, setSelectedCarId] = useState<number | undefined>(0);
+    const [selectedCarId, setSelectedCarId]
+        = useState<number | undefined>(0);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const onChangeNewColor = (e: ChangeEvent<HTMLInputElement>) => {
         setNewColor(e.currentTarget.value)
     }
@@ -61,6 +64,7 @@ const Garage = () => {
 
     return (
         <section className={style.garage}>
+            {isPopupOpen && <PopUp setIsOpen={setIsPopupOpen}/>}
             <header className={style.garage__header}>
                 <div className={style.garage__buttons}>
                     <input value={newName}
@@ -95,6 +99,7 @@ const Garage = () => {
             <div>
                 <GaragePagination
                     setSelectedCarId={setSelectedCarId}
+                    setIsOpen={setIsPopupOpen}
                     setUpdateName={setUpdateName}
                     setUpdateColor={setUpdateColor}/>
             </div>
