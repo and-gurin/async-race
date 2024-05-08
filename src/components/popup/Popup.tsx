@@ -6,17 +6,18 @@ import {useAppSelector} from '../../hooks/useAppDispatch';
 const PopUp = ({setIsOpen}: {setIsOpen: (isOpen: boolean) => void}) => {
 
     const {
-        currentBestTime
+        currentRace
     } = useAppSelector(state => state.winners);
+    console.log(currentRace[0].time)
 
     return (
         <>
             <div className={styles.darkBG} onClick={() => setIsOpen(false)}/>
             <div className={styles.centered}>
                 <div className={styles.modal}>
-                    <h5 className={styles.heading}>The winner is</h5>
+                    <h5 className={styles.heading}>The winner's time is</h5>
                     <div className={styles.modalContent}>
-                        {currentBestTime.name} with time {currentBestTime.bestTime} sec.
+                         {currentRace[0].time} sec.
                     </div>
                     <div style={{marginBottom: '12px'}}>
                         <CustomButton onClick={() => setIsOpen(false)}>

@@ -2,8 +2,11 @@ export type CarPropsType = {
     name: string;
     color: string;
     id?: number;
-    bestTime?: number;
-    wins?: number
+}
+export type WinnerPropsType = {
+    id?: number;
+    time: number;
+    wins: number
 }
 export const AsyncRaceAPI = {
     baseUrl: 'http://localhost:3000',
@@ -73,5 +76,20 @@ export const AsyncRaceAPI = {
             },
             body: JSON.stringify(data)
         });
-    }
+    },
+    postWinner(data: WinnerPropsType) {
+        return fetch(`${this.baseUrl}/winners`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+    },
+    getWinners() {
+        return fetch(`${this.baseUrl}/winners`)
+            .then((response) => response.json())
+            .then((data) => data)
+            .catch((err) => new Error(err));
+    },
 }

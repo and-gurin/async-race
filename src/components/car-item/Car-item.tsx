@@ -3,7 +3,7 @@ import CustomButton from '../button/CustomButton';
 import CarIcon from '../../components/icons/Car-icon';
 import {AsyncRaceAPI} from '../../api/api';
 import {useAppDispatch} from '../../hooks/useAppDispatch';
-import {clearCurrentRaceParticipants, createCurrentRaceParticipants} from '../../features/winners/winnersSlice';
+import {createCurrentRaceParticipants} from '../../features/winners/winnersSlice';
 
 const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStoppedStatus}: {
     name: string,
@@ -30,7 +30,7 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
         const moveCar = () => {
             //const elapsedTime = performance.now() - animationStartTime;
             //const progress = elapsedTime / animationDuration;
-            position += velosity/30;
+            position += velosity/25;
             if (!stopAnimationFlag.current && carRef.current) {
                 //const containerWidth = containerRef.current.offsetWidth;
                 //const carWidth = carRef.current.offsetWidth;
@@ -71,7 +71,7 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
         try {
             const raceData = await AsyncRaceAPI.startStopEngine(carId, 'started');
             const raceTime = Math.round(raceData.distance / raceData.velocity / 10) / 100;
-            dispatch(createCurrentRaceParticipants({id: carId, color: color, name: name, bestTime: raceTime}))
+            dispatch(createCurrentRaceParticipants({id: carId, time: raceTime, wins: 1}))
             console.log(raceData.velocity, raceTime, carId);
             startAnimation(raceData.velocity);
 
@@ -128,7 +128,7 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
                 B
             </CustomButton>
             <div ref={containerRef}
-                 style={{position: 'relative', width: '500px', height: '50px', border: '1px solid black'}}>
+                 style={{position: 'relative', width: '500px', height: '30px', border: '1px solid black'}}>
                 <div ref={carRef} style={{
                     position: 'absolute',
                     top: '50%',

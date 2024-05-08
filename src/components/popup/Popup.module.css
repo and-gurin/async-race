@@ -17,13 +17,17 @@
 }
 
 .modal {
-  width: 375px;
-  height: 268px;
+  width: 300px;
+  height: 200px;
   background: darkgrey;
   color: white;
   z-index: 116;
   border-radius: 16px;
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .heading {

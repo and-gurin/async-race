@@ -3,7 +3,11 @@ import {useAppDispatch, useAppSelector} from '../../hooks/useAppDispatch';
 import {fetchAllCarsAsync, fetchCarsPageAsync, deleteCarAsync} from '../../features/garage/garageSlice';
 import CarItem from '../../components/car-item/Car-item';
 import CustomButton from '../../components/button/CustomButton';
-import {checkCurrentBestTime, clearCurrentRaceParticipants} from '../../features/winners/winnersSlice';
+import {
+    clearCurrentRaceParticipants,
+    createWinnerAsync,
+    fetchAllWinnersAsync, sortCurrentRaceParticipants
+} from '../../features/winners/winnersSlice';
 
 const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setIsOpen}: {
     setSelectedCarId: (id: number | undefined) => void,
@@ -20,7 +24,7 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
         cars
     } = useAppSelector(state => state.garage);
     const {
-        currentWorstTime
+        currentRace
     } = useAppSelector(state => state.winners);
 
     const onClickPageChange = async (page: number) => {
@@ -45,16 +49,44 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
         setUpdateName(name)
         setUpdateColor(color)
     }
-    const onClickStartAllCar = () => {
+
+    const onClickStartAllCar = async () => {
         setStartedStoppedStatus('started');
-        dispatch(clearCurrentRaceParticipants())
-        setTimeout(() => dispatch(checkCurrentBestTime()), 3000)
-        setTimeout(() => setIsOpen(true), currentWorstTime.bestTime!*1000)
+        dispatch(clearCurrentRaceParticipants());
+        // try {
+        //     await dispatch(createWinnerAsync({
+        //         id: currentRace[0].id,
+        //         wins: 1,
+        //         time: currentRace[0].time}))
+        // } catch (error) {
+        //     console.error('Error creating winner:', error);
+        // }
+        // const fetchCurrentWinner = () => {
+        //     // const currentRaceSort = currentRace.sort((a, b) => {
+        //     //     return a.time! - b.time!
+        //     // });
+        //     console.log(currentRace[0])
+        //
+        //     setTimeout(() => setIsOpen(true),
+        //         currentRace[currentRace.length - 1].time!*1000);
+        // }
+        setTimeout(() => dispatch(sortCurrentRaceParticipants()),10000)
+        setTimeout(() => dispatch(createWinnerAsync({
+            id: currentRace[0].id,
+            wins: 1,
+            time: currentRace[0].time,})) , 12000);
+        setTimeout(() => setIsOpen(true),
+                 currentRace[currentRace.length - 1].time!*1000 + 3000);
     }
 
     useEffect(() => {
-        dispatch(fetchCarsPageAsync(1));
-        dispatch(fetchAllCarsAsync());
+        try {
+            dispatch(fetchCarsPageAsync(1));
+            dispatch(fetchAllCarsAsync());
+            dispatch(fetchAllWinnersAsync())
+        } catch (error) {
+            console.error(error)
+        }
     }, [dispatch]);
 
     return (
@@ -71,7 +103,7 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
                 {carsPage.map(car => {
                     return (
                         <CarItem
-                            key={car.color}
+                            key={car.id}
                             startedStoppedStatus={startedStoppedStatus}
                             carId={car.id}
                             onClickRemove={() => onClickRemoveCar(car.id)}
