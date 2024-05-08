@@ -23,17 +23,11 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
     const dispatch = useAppDispatch();
 
     const startAnimation = (velosity: number) => {
-        //const animationDuration = raceTime*1000;
-        //const animationStartTime = performance.now();
         stopAnimationFlag.current = false;
         let position = currentPosition;
         const moveCar = () => {
-            //const elapsedTime = performance.now() - animationStartTime;
-            //const progress = elapsedTime / animationDuration;
-            position += velosity/25;
+            position += velosity/30;
             if (!stopAnimationFlag.current && carRef.current) {
-                //const containerWidth = containerRef.current.offsetWidth;
-                //const carWidth = carRef.current.offsetWidth;
                 if (position <= window.innerWidth - 100) {
                     carRef.current.style.left = `${position}px`;
                     setCurrentPosition(position);
@@ -49,24 +43,6 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
         }
     };
 
-
-    // const startAnimation = (raceTime: number,) => {
-    //     if (animationId === null) {
-    //         let position = currentPosition;
-    //         const moveCar = () => {
-    //             position += raceTime;
-    //             if (carRef.current && position <= window.innerWidth) {
-    //                 carRef.current.style.left = position + 'px';
-    //                 const id = requestAnimationFrame(moveCar);
-    //                 setAnimationId(id);
-    //             } else {
-    //                 cancelAnimationFrame(animationId!);
-    //                 setCurrentPosition(0)
-    //             }
-    //         };
-    //         moveCar();
-    //     }
-    // };
     const onClickStartCar = async () => {
         try {
             const raceData = await AsyncRaceAPI.startStopEngine(carId, 'started');
@@ -93,15 +69,6 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
             }
         }
     };
-    // const stopCar = async () => {
-    //     await AsyncRaceAPI.startStopEngine(carId, 'stopped');
-    //     cancelAnimationFrame(animationId!);
-    //     setAnimationId(null);
-    //     setCurrentPosition(0)
-    //     if (carRef.current) {
-    //         carRef.current.style.left = '0px';
-    //     }
-    // };
 
     useEffect(() => {
         if (startedStoppedStatus === 'started') {

@@ -1,13 +1,19 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncRaceAPI, WinnerPropsType} from '../../api/api';
+import {AsyncRaceAPI, WinnerPropsType, WinnerTablePropsType} from '../../api/api';
 import { current } from '@reduxjs/toolkit';
 import {AppDispatch} from '../../store/store';
 
 export const winnersSlice = createSlice({
         name: 'winners',
         initialState: {
-            currentRace: [] as WinnerPropsType[],
-            winners: [] as WinnerPropsType[],},
+            currentPage: 1,
+            currentRace: [{
+                id: 1,
+                wins: 1,
+                time: 10,
+            }] as WinnerPropsType[],
+            winners: [] as WinnerPropsType[],
+        },
         reducers: {
             createCurrentRaceParticipants: (state, action: PayloadAction<{
                 id: number | undefined,
@@ -22,15 +28,28 @@ export const winnersSlice = createSlice({
                 });
                 console.log(current(state));
             },
-            clearCurrentRaceParticipants: (state) => {
-                state.currentRace = [];
+            clearCurrentRaceParticipants: (state, action: PayloadAction) => {
+                state.currentRace = [{
+                    id: 1,
+                    wins: 1,
+                    time: 10,
+                }]
+                console.log(current(state));
             },
             createWinner: (state, action: PayloadAction<{
                 id: number | undefined,
+                wins: number,
                 time: number,
-                wins: number
             }>) => {
-                state.winners.push(action.payload);
+                const existWinnerIndex = state.winners.findIndex(winner =>
+                    winner.id === action.payload.id)
+                if (existWinnerIndex !== -1) {
+                    state.winners[existWinnerIndex].wins += 1;
+                    state.winners[existWinnerIndex].time = action.payload.time;
+                } else {
+                    state.winners.push(action.payload);
+                }
+
                 console.log(current(state));
             },
             fetchAllWinners: (state, action: PayloadAction<{
@@ -65,9 +84,9 @@ export const fetchAllWinnersAsync = () => async (dispatch: any) => {
 
 export const {
     createCurrentRaceParticipants,
-    clearCurrentRaceParticipants,
     createWinner,
     fetchAllWinners,
-    sortCurrentRaceParticipants
+    sortCurrentRaceParticipants,
+    clearCurrentRaceParticipants
 } = winnersSlice.actions;
 export const winnersReducer = winnersSlice.reducer

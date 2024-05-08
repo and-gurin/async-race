@@ -4,7 +4,6 @@ import {fetchAllCarsAsync, fetchCarsPageAsync, deleteCarAsync} from '../../featu
 import CarItem from '../../components/car-item/Car-item';
 import CustomButton from '../../components/button/CustomButton';
 import {
-    clearCurrentRaceParticipants,
     createWinnerAsync,
     fetchAllWinnersAsync, sortCurrentRaceParticipants
 } from '../../features/winners/winnersSlice';
@@ -52,31 +51,8 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
 
     const onClickStartAllCar = async () => {
         setStartedStoppedStatus('started');
-        dispatch(clearCurrentRaceParticipants());
-        // try {
-        //     await dispatch(createWinnerAsync({
-        //         id: currentRace[0].id,
-        //         wins: 1,
-        //         time: currentRace[0].time}))
-        // } catch (error) {
-        //     console.error('Error creating winner:', error);
-        // }
-        // const fetchCurrentWinner = () => {
-        //     // const currentRaceSort = currentRace.sort((a, b) => {
-        //     //     return a.time! - b.time!
-        //     // });
-        //     console.log(currentRace[0])
-        //
-        //     setTimeout(() => setIsOpen(true),
-        //         currentRace[currentRace.length - 1].time!*1000);
-        // }
-        setTimeout(() => dispatch(sortCurrentRaceParticipants()),10000)
-        setTimeout(() => dispatch(createWinnerAsync({
-            id: currentRace[0].id,
-            wins: 1,
-            time: currentRace[0].time,})) , 12000);
-        setTimeout(() => setIsOpen(true),
-                 currentRace[currentRace.length - 1].time!*1000 + 3000);
+        setTimeout(() => dispatch(sortCurrentRaceParticipants()),18000)
+        setTimeout(() => setIsOpen(true), 23000);
     }
 
     useEffect(() => {

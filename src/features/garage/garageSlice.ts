@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createSlice, current, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncRaceAPI, CarPropsType} from '../../api/api';
 import generateName from '../../components/generate/generateName';
 import generateColor from '../../components/generate/generateColor';
@@ -42,6 +42,7 @@ export const garageSlice = createSlice({
             }>) => {
                 state.carsPage = action.payload.cars;
                 state.currentPage = action.payload.page;
+                console.log(current(state));
             },
             fetchAllCars: (state, action: PayloadAction<{
                 cars: CarPropsType[],

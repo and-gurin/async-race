@@ -5,8 +5,16 @@ export type CarPropsType = {
 }
 export type WinnerPropsType = {
     id?: number;
+    wins: number;
     time: number;
-    wins: number
+
+}
+export type WinnerTablePropsType = {
+    id: number;
+    time: number;
+    wins: number;
+    name: string;
+    color: string;
 }
 export const AsyncRaceAPI = {
     baseUrl: 'http://localhost:3000',
