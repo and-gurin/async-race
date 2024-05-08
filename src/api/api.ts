@@ -7,7 +7,6 @@ export type WinnerPropsType = {
     id?: number;
     wins: number;
     time: number;
-
 }
 export type WinnerTablePropsType = {
     id: number;
@@ -96,6 +95,12 @@ export const AsyncRaceAPI = {
     },
     getWinners() {
         return fetch(`${this.baseUrl}/winners`)
+            .then((response) => response.json())
+            .then((data) => data)
+            .catch((err) => new Error(err));
+    },
+    getWinnersPage(page: number) {
+        return fetch(`${this.baseUrl}/winners?_page=${page}&_limit=7`)
             .then((response) => response.json())
             .then((data) => data)
             .catch((err) => new Error(err));

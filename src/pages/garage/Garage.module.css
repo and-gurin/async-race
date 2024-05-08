@@ -1,0 +1,44 @@
+.garage__wrapper {
+  max-width: 1024px;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.garage__header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0 20px 0;
+}
+
+.garage__buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.garage__input_color {
+  height: 20px;
+  width: 15px;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}
+
+.garage__input_text {
+  height: 25px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  color: #a0d18c;
+  width: 200px;
+  padding-left: 10px;
+}
+
+.garage__input_text:focus {
+  outline: none;
+  border: 1px solid #a0d18c;
+  color: #2d9fd9;
+}

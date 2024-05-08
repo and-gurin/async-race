@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
-import style from '../garage/garage.module.css'
+import style from './Garage.module.css'
 import {useAppDispatch} from '../../hooks/useAppDispatch';
 import {
     createCarAsync,
@@ -65,43 +65,47 @@ const Garage = () => {
     return (
         <section className={style.garage}>
             {isPopupOpen && <PopUp setIsOpen={setIsPopupOpen}/>}
-            <header className={style.garage__header}>
-                <div className={style.garage__buttons}>
-                    <input value={newName}
-                           onChange={onChangeNewName}
-                           className={style.garage__input}
-                           type={"text"}/>
-                    <input value={newColor}
-                           onChange={onChangeNewColor}
-                           className={style.garage__input}
-                           type={"color"}/>
-                    <button onClick={onClickCreateCar}>
-                        Create
-                    </button>
-                </div>
-                <div className={style.garage__buttons}>
-                    <input value={updateName}
-                           onChange={onChangeUpdateName}
-                           className={style.garage__input}
-                           type={"text"}/>
-                    <input value={updateColor}
-                           onChange={onChangeUpdateColor}
-                           className={style.garage__input}
-                           type={"color"}/>
-                    <CustomButton onClick={onClickUpdateCar}>
-                        Update
+            <div className={style.garage__wrapper}>
+                <header className={style.garage__header}>
+                    <div className={style.garage__buttons}>
+                        <input value={newName}
+                               placeholder={'Enter the name'}
+                               onChange={onChangeNewName}
+                               className={style.garage__input_text}
+                               type={"text"}/>
+                        <input value={newColor}
+                               onChange={onChangeNewColor}
+                               className={style.garage__input_color}
+                               type={"color"}/>
+                        <CustomButton onClick={onClickCreateCar}>
+                            Create
+                        </CustomButton>
+                    </div>
+                    <div className={style.garage__buttons}>
+                        <input value={updateName}
+                               placeholder={'Enter the name'}
+                               onChange={onChangeUpdateName}
+                               className={style.garage__input_text}
+                               type={"text"}/>
+                        <input value={updateColor}
+                               onChange={onChangeUpdateColor}
+                               className={style.garage__input_color}
+                               type={"color"}/>
+                        <CustomButton onClick={onClickUpdateCar}>
+                            Update
+                        </CustomButton>
+                    </div>
+                    <CustomButton onClick={onClickGenerateCars}>
+                        Generate cars
                     </CustomButton>
+                </header>
+                <div>
+                    <GaragePagination
+                        setSelectedCarId={setSelectedCarId}
+                        setIsOpen={setIsPopupOpen}
+                        setUpdateName={setUpdateName}
+                        setUpdateColor={setUpdateColor}/>
                 </div>
-                <CustomButton onClick={onClickGenerateCars}>
-                    Generate cars
-                </CustomButton>
-            </header>
-            <div>
-                <GaragePagination
-                    setSelectedCarId={setSelectedCarId}
-                    setIsOpen={setIsPopupOpen}
-                    setUpdateName={setUpdateName}
-                    setUpdateColor={setUpdateColor}/>
             </div>
         </section>
     );

@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AsyncRaceAPI, WinnerPropsType, WinnerTablePropsType} from '../../api/api';
+import {AsyncRaceAPI, CarPropsType, WinnerPropsType, WinnerTablePropsType} from '../../api/api';
 import { current } from '@reduxjs/toolkit';
 import {AppDispatch} from '../../store/store';
 
@@ -13,6 +13,7 @@ export const winnersSlice = createSlice({
                 time: 10,
             }] as WinnerPropsType[],
             winners: [] as WinnerPropsType[],
+            winnersPage: [] as WinnerPropsType[]
         },
         reducers: {
             createCurrentRaceParticipants: (state, action: PayloadAction<{
@@ -58,6 +59,13 @@ export const winnersSlice = createSlice({
                 state.winners = action.payload.winners;
                 console.log(current(state));
             },
+            fetchWinnersPage: (state, action: PayloadAction<{
+                winners: WinnerPropsType[], page: number,
+            }>) => {
+                state.winnersPage = action.payload.winners;
+                state.currentPage = action.payload.page;
+                console.log(current(state));
+            },
         }
     }
 )
@@ -69,6 +77,14 @@ export const createWinnerAsync = (winnerData: {
     try {
         await AsyncRaceAPI.postWinner(winnerData);
         dispatch(createWinner(winnerData));
+    } catch (error) {
+        console.error(error);
+    }
+};
+export const fetchWinnersPageAsync = (page: number) => async (dispatch: any) => {
+    try {
+        const winners: WinnerPropsType[] = await AsyncRaceAPI.getWinnersPage(page);
+        dispatch(fetchWinnersPage({winners, page}));
     } catch (error) {
         console.error(error);
     }
@@ -87,6 +103,7 @@ export const {
     createWinner,
     fetchAllWinners,
     sortCurrentRaceParticipants,
-    clearCurrentRaceParticipants
+    clearCurrentRaceParticipants,
+    fetchWinnersPage
 } = winnersSlice.actions;
 export const winnersReducer = winnersSlice.reducer
