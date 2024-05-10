@@ -5,8 +5,9 @@ import CarItem from '../../components/car-item/Car-item';
 import CustomButton from '../../components/button/CustomButton';
 import {
     createWinnerAsync,
-    fetchAllWinnersAsync, sortCurrentRaceParticipants
+    fetchAllWinnersAsync, fetchWinnersPageAsync, sortCurrentRaceParticipants
 } from '../../features/winners/winnersSlice';
+import {restoreState, saveState} from '../../components/local-storage/localStorage';
 
 const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setIsOpen}: {
     setSelectedCarId: (id: number | undefined) => void,
@@ -29,6 +30,7 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
     const onClickPageChange = async (page: number) => {
         try {
             await dispatch(fetchCarsPageAsync(page));
+            saveState('currentGaragePage', page)
             console.log('Page changed successfully!');
         } catch (error) {
             console.error('Error changing page:', error);
@@ -57,7 +59,9 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
 
     useEffect(() => {
         try {
-            dispatch(fetchCarsPageAsync(1));
+            const savedPage = restoreState('currentGaragePage', 1)
+            dispatch(fetchWinnersPageAsync(savedPage));
+            dispatch(fetchCarsPageAsync(savedPage));
             dispatch(fetchAllCarsAsync());
             dispatch(fetchAllWinnersAsync())
         } catch (error) {
@@ -68,10 +72,16 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
     return (
         <div>
             <div>
-                <CustomButton onClick={() => onClickStartAllCar()}>
+                <CustomButton
+                    onClick={() => onClickStartAllCar()}
+                    xType={'default'}
+                >
                     Race
                 </CustomButton>
-                <CustomButton onClick={() => setStartedStoppedStatus('stopped')}>
+                <CustomButton
+                    onClick={() => setStartedStoppedStatus('stopped')}
+                    xType={'default'}
+                >
                     Reset
                 </CustomButton>
             </div>
@@ -90,13 +100,19 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
                 })}
             </div>
             <div>
-                <CustomButton disabled={currentPage === 1}
-                        onClick={() => onClickPageChange(currentPage - 1)}>
+                <CustomButton
+                    disabled={currentPage === 1}
+                    xType={'default'}
+                        onClick={() => onClickPageChange(currentPage - 1)}
+                >
                     Previous
                 </CustomButton>
                 <span>Page {currentPage}</span>
-                <CustomButton disabled={currentPage >= Math.ceil(cars.length / 7)}
-                        onClick={() => onClickPageChange(currentPage + 1)}>
+                <CustomButton
+                    disabled={currentPage >= Math.ceil(cars.length / 7)}
+                    xType={'default'}
+                        onClick={() => onClickPageChange(currentPage + 1)}
+                >
                     Next
                 </CustomButton>
             </div>

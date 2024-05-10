@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import style from './Garage.module.css'
 import {useAppDispatch} from '../../hooks/useAppDispatch';
 import {
@@ -9,6 +9,7 @@ import {
 import CustomButton from '../../components/button/CustomButton';
 import GaragePagination from '../../components/garage-pagination/GaragePagination';
 import PopUp from '../../components/popup/Popup';
+import {restoreState, saveState} from '../../components/local-storage/localStorage';
 
 const Garage = () => {
     const [newColor, setNewColor] = useState('');
@@ -19,10 +20,12 @@ const Garage = () => {
         = useState<number | undefined>(0);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const onChangeNewColor = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewColor(e.currentTarget.value)
+        setNewColor(e.currentTarget.value);
+        saveState('currentNewColor', e.currentTarget.value)
     }
     const onChangeNewName = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewName(e.currentTarget.value)
+        setNewName(e.currentTarget.value);
+        saveState('currentNewName', e.currentTarget.value)
     }
     const onClickCreateCar = async () => {
         try {
@@ -35,10 +38,12 @@ const Garage = () => {
         setNewColor('')
     }
     const onChangeUpdateColor = (e: ChangeEvent<HTMLInputElement>) => {
-        setUpdateColor(e.currentTarget.value)
+        setUpdateColor(e.currentTarget.value);
+        saveState('currentUpdateColor', e.currentTarget.value)
     }
     const onChangeUpdateName = (e: ChangeEvent<HTMLInputElement>) => {
-        setUpdateName(e.currentTarget.value)
+        setUpdateName(e.currentTarget.value);
+        saveState('currentUpdateName', e.currentTarget.value)
     }
     const onClickUpdateCar = async () => {
         try {
@@ -62,6 +67,17 @@ const Garage = () => {
     }
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        const savedNewColor = restoreState('currentNewColor', '');
+        setNewColor(savedNewColor);
+        const savedNewName = restoreState('currentNewName', '');
+        setNewColor(savedNewName);
+        const savedUpdatedColor = restoreState('currentUpdatedColor', '');
+        setNewColor(savedUpdatedColor);
+        const saveUpdatedName = restoreState('currentUpdatedName', '');
+        setNewColor(saveUpdatedName);
+    }, []);
+
     return (
         <section className={style.garage}>
             {isPopupOpen && <PopUp setIsOpen={setIsPopupOpen}/>}
@@ -77,7 +93,7 @@ const Garage = () => {
                                onChange={onChangeNewColor}
                                className={style.garage__input_color}
                                type={"color"}/>
-                        <CustomButton onClick={onClickCreateCar}>
+                        <CustomButton onClick={onClickCreateCar} xType={'default'}>
                             Create
                         </CustomButton>
                     </div>
@@ -91,11 +107,11 @@ const Garage = () => {
                                onChange={onChangeUpdateColor}
                                className={style.garage__input_color}
                                type={"color"}/>
-                        <CustomButton onClick={onClickUpdateCar}>
+                        <CustomButton onClick={onClickUpdateCar} xType={'default'}>
                             Update
                         </CustomButton>
                     </div>
-                    <CustomButton onClick={onClickGenerateCars}>
+                    <CustomButton onClick={onClickGenerateCars} xType={'default'}>
                         Generate cars
                     </CustomButton>
                 </header>

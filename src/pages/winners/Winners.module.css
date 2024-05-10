@@ -22,14 +22,13 @@ table tr th {
     text-align: center;
     border-top: 1px solid #bbb;
     font-weight: bold;
-    height: 80px;
+    height: 40px;
 }
 
 table tr th,
 table tr td {
     border-right: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
-    padding: 3px;
 }
 
 table tr th:first-child,

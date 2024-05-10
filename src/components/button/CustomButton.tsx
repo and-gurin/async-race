@@ -5,17 +5,29 @@ type DefaultButtonPropsType = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonE
     HTMLButtonElement>
 
 type SuperButtonPropsType = DefaultButtonPropsType & {
-    icon?: SVGSVGElement
+    icon?: SVGSVGElement,
+    xType?: string
 }
 
 const CustomButton: React.FC<SuperButtonPropsType> = (
     {
         icon,
+        xType,
+        className,
+        disabled,
         ...restProps
     }
 ) => {
+
+    const finalClassName = disabled ? style.button + ' ' + style.disabled
+        : xType === 'big' ? style.button + ' ' + style.big
+            : xType === 'secondary' ? style.button + ' ' + style.secondary
+                : xType === 'default' ? style.button + ' ' + style.default
+                : style.button
+
     return (
-        <button className={style.button}
+        <button className={finalClassName}
+                disabled={disabled}
             {...restProps}
         />
     )

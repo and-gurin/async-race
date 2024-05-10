@@ -81,17 +81,17 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
     return (
         <div>
             <div>
-                <CustomButton onClick={onClickSelect}>
+                <CustomButton onClick={onClickSelect} xType={'secondary'}>
                     Select
                 </CustomButton>
-                <CustomButton onClick={onClickRemove}>
+                <CustomButton onClick={onClickRemove} xType={'secondary'}>
                     Remove
                 </CustomButton>
             </div>
-            <CustomButton onClick={onClickStartCar}>
+            <CustomButton onClick={onClickStartCar} xType={'secondary'}>
                 A
             </CustomButton>
-            <CustomButton onClick={stopCar}>
+            <CustomButton onClick={stopCar} xType={'secondary'}>
                 B
             </CustomButton>
             <div ref={containerRef}

@@ -1,0 +1,8 @@
+.header__wrapper {
+    max-width: 1024px;
+    width: 100%;
+    margin: 20px auto;
+    display: flex;
+    gap: 30px;
+    justify-content: flex-start;
+}
