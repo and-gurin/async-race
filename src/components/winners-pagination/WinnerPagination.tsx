@@ -5,7 +5,6 @@ import {fetchWinnersPageAsync} from '../../features/winners/winnersSlice';
 import {restoreState, saveState} from '../../components/local-storage/localStorage';
 
 const WinnerPagination = () => {
-
     const dispatch = useAppDispatch();
     const {
         currentPage,
@@ -13,7 +12,7 @@ const WinnerPagination = () => {
     } = useAppSelector(state => state.winners)
     const onClickPageChange = async (page: number) => {
         try {
-            await dispatch(fetchWinnersPageAsync(page));
+            await dispatch(fetchWinnersPageAsync(page, 'wins', 'ASC'));
             saveState('currentWinnersPage', page)
             console.log('Page changed successfully!');
         } catch (error) {
@@ -25,7 +24,7 @@ const WinnerPagination = () => {
     useEffect(() => {
         try {
             const savedPage = restoreState('currentWinnersPage', 1)
-            dispatch(fetchWinnersPageAsync(savedPage));
+            dispatch(fetchWinnersPageAsync(savedPage, 'wins', 'ASC'));
         } catch (error) {
             console.error(error)
         }

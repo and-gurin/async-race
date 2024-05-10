@@ -81,9 +81,9 @@ export const createWinnerAsync = (winnerData: {
         console.error(error);
     }
 };
-export const fetchWinnersPageAsync = (page: number) => async (dispatch: any) => {
+export const fetchWinnersPageAsync = (page: number, sort: string, order: string) => async (dispatch: any) => {
     try {
-        const winners: WinnerPropsType[] = await AsyncRaceAPI.getWinnersPage(page);
+        const winners: WinnerPropsType[] = await AsyncRaceAPI.getWinnersPage(page, sort, order);
         dispatch(fetchWinnersPage({winners, page}));
     } catch (error) {
         console.error(error);

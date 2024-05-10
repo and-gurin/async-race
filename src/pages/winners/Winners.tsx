@@ -1,16 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {createSelector} from '@reduxjs/toolkit';
 import {RootStateType, store} from '../../store/store';
-import {useAppSelector} from '../../hooks/useAppDispatch';
+import {useAppDispatch, useAppSelector} from '../../hooks/useAppDispatch';
 import WinnerPagination from '../../components/winners-pagination/WinnerPagination';
 import CarIcon from '../../components/icons/Car-icon';
 import style from './Winners.module.css'
+import CustomSort from '../../components/custom-sort/CustomSort';
+import {fetchWinnersPageAsync} from '../../features/winners/winnersSlice';
 
 const Winners = () => {
-
+    const [orderWins, setOrderWins] = useState('');
+    const [orderTime, setOrderTime] = useState('');
+    const dispatch = useAppDispatch();
     const {
-        winners
-    } = useAppSelector(state => state.winners)
+        winners,
+        currentPage
+    } = useAppSelector(state => state.winners);
     const selectCars = (state: RootStateType) => state.garage.cars;
     const state = store.getState()
     const selectCar = (state: RootStateType, carId: number) => {
@@ -28,6 +33,24 @@ const Winners = () => {
             }));
         }
     );
+    const onChangeSortWins = async (newOrder: string) => {
+      setOrderWins(newOrder);
+        try {
+            await dispatch(fetchWinnersPageAsync(currentPage, 'wins', orderWins));
+            console.log('Page changed successfully!');
+        } catch (error) {
+            console.error('Error changing page:', error);
+        }
+    }
+    const onChangeSortTime = async (newOrder: string) => {
+        setOrderTime(newOrder);
+        try {
+            await dispatch(fetchWinnersPageAsync(currentPage, 'time', orderTime));
+            console.log('Page changed successfully!');
+        } catch (error) {
+            console.error('Error changing page:', error);
+        }
+    }
     const winnerTable = useAppSelector((state: RootStateType) => selectWinnerTable(state));
 
     return (
@@ -40,8 +63,14 @@ const Winners = () => {
                         <th >№</th>
                         <th>Car</th>
                         <th>Name</th>
-                        <th>Wins</th>
-                        <th>Best time</th>
+                        <th onClick={() => onChangeSortWins}>
+                            Wins
+                            <CustomSort order={orderWins} onChange={onChangeSortWins}/>
+                        </th>
+                        <th onClick={() => onChangeSortTime}>
+                            Best time
+                            <CustomSort order={orderTime} onChange={onChangeSortTime}/>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>

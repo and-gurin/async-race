@@ -99,8 +99,8 @@ export const AsyncRaceAPI = {
             .then((data) => data)
             .catch((err) => new Error(err));
     },
-    getWinnersPage(page: number) {
-        return fetch(`${this.baseUrl}/winners?_page=${page}&_limit=7`)
+    getWinnersPage(page: number, sort: string, order: string) {
+        return fetch(`${this.baseUrl}/winners?_page=${page}&_limit=7&_sort=${sort}&_order=${order}`)
             .then((response) => response.json())
             .then((data) => data)
             .catch((err) => new Error(err));

@@ -28,7 +28,7 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
         const moveCar = () => {
             position += velosity/30;
             if (!stopAnimationFlag.current && carRef.current) {
-                if (position <= window.innerWidth - 100) {
+                if (position <= window.innerWidth - 200) {
                     carRef.current.style.left = `${position}px`;
                     setCurrentPosition(position);
                 } else {

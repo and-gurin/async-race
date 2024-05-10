@@ -60,7 +60,7 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
     useEffect(() => {
         try {
             const savedPage = restoreState('currentGaragePage', 1)
-            dispatch(fetchWinnersPageAsync(savedPage));
+            //dispatch(fetchWinnersPageAsync(savedPage));
             dispatch(fetchCarsPageAsync(savedPage));
             dispatch(fetchAllCarsAsync());
             dispatch(fetchAllWinnersAsync())
