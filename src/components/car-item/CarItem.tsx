@@ -4,6 +4,7 @@ import CarIcon from '../../components/icons/Car-icon';
 import {AsyncRaceAPI} from '../../api/api';
 import {useAppDispatch} from '../../hooks/useAppDispatch';
 import {createCurrentRaceParticipants} from '../../features/winners/winnersSlice';
+import style from './CarItem.module.css'
 
 const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStoppedStatus}: {
     name: string,
@@ -22,13 +23,13 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
 
     const dispatch = useAppDispatch();
 
-    const startAnimation = (velosity: number) => {
+    const startAnimation = (velocity: number) => {
         stopAnimationFlag.current = false;
         let position = currentPosition;
         const moveCar = () => {
-            position += velosity/30;
+            position += velocity/30;
             if (!stopAnimationFlag.current && carRef.current) {
-                if (position <= window.innerWidth - 200) {
+                if (position <= window.innerWidth - 320) {
                     carRef.current.style.left = `${position}px`;
                     setCurrentPosition(position);
                 } else {
@@ -79,8 +80,8 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
     }, [startedStoppedStatus])
 
     return (
-        <div>
-            <div>
+        <div className={style.car}>
+            <div className={style.car__buttons}>
                 <CustomButton onClick={onClickSelect} xType={'secondary'}>
                     Select
                 </CustomButton>
@@ -88,23 +89,22 @@ const CarItem = ({name, color, onClickSelect, onClickRemove, carId, startedStopp
                     Remove
                 </CustomButton>
             </div>
-            <CustomButton onClick={onClickStartCar} xType={'secondary'}>
-                A
-            </CustomButton>
-            <CustomButton onClick={stopCar} xType={'secondary'}>
-                B
-            </CustomButton>
-            <div ref={containerRef}
-                 style={{position: 'relative', width: '500px', height: '30px', border: '1px solid black'}}>
-                <div ref={carRef} style={{
-                    position: 'absolute',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                }}>
+            <div className={style.car__buttons}>
+                <CustomButton onClick={onClickStartCar} xType={'secondary'}>
+                    A
+                </CustomButton>
+                <CustomButton onClick={stopCar} xType={'secondary'}>
+                    B
+                </CustomButton>
+            </div>
+            <div className={style.car__container} ref={containerRef}
+                 style={{}}>
+                <div className={style.car__icon} ref={carRef}>
                     <CarIcon color={color}/>
                 </div>
+                <span className={style.car__title}>{name}</span>
             </div>
-            <span>{name}</span>
+
         </div>
     );
 };

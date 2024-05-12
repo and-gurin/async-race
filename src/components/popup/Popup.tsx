@@ -18,9 +18,9 @@ const PopUp = ({setIsOpen}: {setIsOpen: (isOpen: boolean) => void}) => {
     useEffect(() => {
         dispatch(createWinnerAsync({
             id: currentRace[0].id,
-            wins: 1,
+            wins: currentRace[0].wins,
             time: currentRace[0].time,}))
-    }, []);
+    }, [dispatch]);
 
     return (
         <>
@@ -32,7 +32,7 @@ const PopUp = ({setIsOpen}: {setIsOpen: (isOpen: boolean) => void}) => {
                          {currentRace[0].time} sec.
                     </div>
                     <div style={{marginBottom: '12px'}}>
-                        <CustomButton onClick={onClickOk}>
+                        <CustomButton xType={'default'} onClick={onClickOk}>
                             Ok
                         </CustomButton>
                     </div>

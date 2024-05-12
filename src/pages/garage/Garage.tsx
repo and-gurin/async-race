@@ -10,6 +10,7 @@ import CustomButton from '../../components/button/CustomButton';
 import GaragePagination from '../../components/garage-pagination/GaragePagination';
 import PopUp from '../../components/popup/Popup';
 import {restoreState, saveState} from '../../components/local-storage/localStorage';
+import {sortCurrentRaceParticipants} from '../../features/winners/winnersSlice';
 
 const Garage = () => {
     const [newColor, setNewColor] = useState('');
@@ -19,6 +20,8 @@ const Garage = () => {
     const [selectedCarId, setSelectedCarId]
         = useState<number | undefined>(0);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [startedStoppedStatus, setStartedStoppedStatus]
+        = useState<'' | 'started' | 'stopped'>('');
     const onChangeNewColor = (e: ChangeEvent<HTMLInputElement>) => {
         setNewColor(e.currentTarget.value);
         saveState('currentNewColor', e.currentTarget.value)
@@ -66,6 +69,11 @@ const Garage = () => {
         setNewColor('')
     }
     const dispatch = useAppDispatch();
+    const onClickStartAllCar = async () => {
+        setStartedStoppedStatus('started');
+        setTimeout(() => dispatch(sortCurrentRaceParticipants()),18000)
+        setTimeout(() => setIsPopupOpen(true), 23000);
+    }
 
     useEffect(() => {
         const savedNewColor = restoreState('currentNewColor', '');
@@ -84,6 +92,20 @@ const Garage = () => {
             <div className={style.garage__wrapper}>
                 <header className={style.garage__header}>
                     <div className={style.garage__buttons}>
+                        <CustomButton
+                            onClick={() => onClickStartAllCar()}
+                            xType={'default'}
+                        >
+                            Race
+                        </CustomButton>
+                        <CustomButton
+                            onClick={() => setStartedStoppedStatus('stopped')}
+                            xType={'default'}
+                        >
+                            Reset
+                        </CustomButton>
+                    </div>
+                    <div className={style.garage__buttons}>
                         <input value={newName}
                                placeholder={'Enter the name'}
                                onChange={onChangeNewName}
@@ -93,7 +115,10 @@ const Garage = () => {
                                onChange={onChangeNewColor}
                                className={style.garage__input_color}
                                type={"color"}/>
-                        <CustomButton onClick={onClickCreateCar} xType={'default'}>
+                        <CustomButton
+                            onClick={onClickCreateCar}
+                            xType={'default'}
+                        >
                             Create
                         </CustomButton>
                     </div>
@@ -107,7 +132,10 @@ const Garage = () => {
                                onChange={onChangeUpdateColor}
                                className={style.garage__input_color}
                                type={"color"}/>
-                        <CustomButton onClick={onClickUpdateCar} xType={'default'}>
+                        <CustomButton
+                            onClick={onClickUpdateCar}
+                            xType={'default'}
+                        >
                             Update
                         </CustomButton>
                     </div>
@@ -118,7 +146,7 @@ const Garage = () => {
                 <div>
                     <GaragePagination
                         setSelectedCarId={setSelectedCarId}
-                        setIsOpen={setIsPopupOpen}
+                        startedStoppedStatus={startedStoppedStatus}
                         setUpdateName={setUpdateName}
                         setUpdateColor={setUpdateColor}/>
                 </div>

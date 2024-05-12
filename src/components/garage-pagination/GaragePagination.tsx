@@ -1,31 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks/useAppDispatch';
 import {fetchAllCarsAsync, fetchCarsPageAsync, deleteCarAsync} from '../../features/garage/garageSlice';
-import CarItem from '../../components/car-item/Car-item';
+import CarItem from '../../components/car-item/CarItem';
 import CustomButton from '../../components/button/CustomButton';
-import {
-    createWinnerAsync,
-    fetchAllWinnersAsync, fetchWinnersPageAsync, sortCurrentRaceParticipants
-} from '../../features/winners/winnersSlice';
+import {fetchAllWinnersAsync} from '../../features/winners/winnersSlice';
 import {restoreState, saveState} from '../../components/local-storage/localStorage';
 
-const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setIsOpen}: {
+const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, startedStoppedStatus}: {
     setSelectedCarId: (id: number | undefined) => void,
     setUpdateName: (name: string) => void,
     setUpdateColor: (color: string) => void,
-    setIsOpen: (isOpen: boolean) => void,
+    startedStoppedStatus: '' | 'started' | 'stopped'
 }) => {
-    const [startedStoppedStatus, setStartedStoppedStatus]
-        = useState<'' | 'started' | 'stopped'>('');
     const dispatch = useAppDispatch();
     const {
         carsPage,
         currentPage,
         cars
     } = useAppSelector(state => state.garage);
-    const {
-        currentRace
-    } = useAppSelector(state => state.winners);
 
     const onClickPageChange = async (page: number) => {
         try {
@@ -51,16 +43,9 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
         setUpdateColor(color)
     }
 
-    const onClickStartAllCar = async () => {
-        setStartedStoppedStatus('started');
-        setTimeout(() => dispatch(sortCurrentRaceParticipants()),18000)
-        setTimeout(() => setIsOpen(true), 23000);
-    }
-
     useEffect(() => {
         try {
             const savedPage = restoreState('currentGaragePage', 1)
-            //dispatch(fetchWinnersPageAsync(savedPage));
             dispatch(fetchCarsPageAsync(savedPage));
             dispatch(fetchAllCarsAsync());
             dispatch(fetchAllWinnersAsync())
@@ -71,20 +56,7 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
 
     return (
         <div>
-            <div>
-                <CustomButton
-                    onClick={() => onClickStartAllCar()}
-                    xType={'default'}
-                >
-                    Race
-                </CustomButton>
-                <CustomButton
-                    onClick={() => setStartedStoppedStatus('stopped')}
-                    xType={'default'}
-                >
-                    Reset
-                </CustomButton>
-            </div>
+
             <div>
                 {carsPage.map(car => {
                     return (
@@ -115,8 +87,8 @@ const GaragePagination = ({setSelectedCarId, setUpdateName, setUpdateColor, setI
                 >
                     Next
                 </CustomButton>
+                <span>There are {cars.length} in total</span>
             </div>
-            <div>{cars.length}</div>
         </div>
     );
 };

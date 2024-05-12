@@ -25,6 +25,8 @@
     background-color: #FFFFFF;
     color: #004D99;
     padding: 0 5px;
+    font-size: 8px;
+    border-radius: 3px;
 }
 
 .big {

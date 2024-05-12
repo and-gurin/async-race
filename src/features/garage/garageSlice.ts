@@ -2,6 +2,7 @@ import {createSlice, current, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncRaceAPI, CarPropsType} from '../../api/api';
 import generateName from '../../components/generate/generateName';
 import generateColor from '../../components/generate/generateColor';
+import {AppDispatch} from '../../store/store';
 
 export const garageSlice = createSlice({
         name: 'garage',
@@ -53,7 +54,9 @@ export const garageSlice = createSlice({
     }
 )
 
-export const createCarAsync = (carData: { name: string; color: string }) => async (dispatch: any) => {
+export const createCarAsync = (
+    carData: { name: string; color: string }
+) => async (dispatch: any) => {
     try {
         await AsyncRaceAPI.postCar(carData);
         dispatch(createCar(carData));
@@ -61,7 +64,9 @@ export const createCarAsync = (carData: { name: string; color: string }) => asyn
         console.error(error);
     }
 };
-export const updateCarAsync = (id: number | undefined, carData: { name: string; color: string }) => async (dispatch: any) => {
+export const updateCarAsync = (
+    id: number | undefined, carData: { name: string; color: string }
+) => async (dispatch: AppDispatch) => {
     try {
         await AsyncRaceAPI.updateCar(id, carData);
         dispatch(updateCar({id, carData}))
@@ -69,7 +74,7 @@ export const updateCarAsync = (id: number | undefined, carData: { name: string; 
         console.error(error);
     }
 };
-export const generateCarsAsync = () => async (dispatch: any) => {
+export const generateCarsAsync = () => async (dispatch: AppDispatch) => {
     try {
         for (let i = 0; i <= 100; i ++) {
             const carData = {
@@ -83,7 +88,7 @@ export const generateCarsAsync = () => async (dispatch: any) => {
         console.error(error);
     }
 };
-export const deleteCarAsync = (id: number | undefined) => async (dispatch: any) => {
+export const deleteCarAsync = (id: number | undefined) => async (dispatch: AppDispatch) => {
     try {
         await AsyncRaceAPI.removeCar(id);
         dispatch(deleteCar({id}))
@@ -91,7 +96,7 @@ export const deleteCarAsync = (id: number | undefined) => async (dispatch: any) 
         console.error(error);
     }
 };
-export const fetchCarsPageAsync = (page: number) => async (dispatch: any) => {
+export const fetchCarsPageAsync = (page: number) => async (dispatch: AppDispatch) => {
     try {
         const cars: CarPropsType[] = await AsyncRaceAPI.getCarsPage(page);
         dispatch(fetchCarsPage({cars, page}));
@@ -99,7 +104,7 @@ export const fetchCarsPageAsync = (page: number) => async (dispatch: any) => {
         console.error(error);
     }
 };
-export const fetchAllCarsAsync = () => async (dispatch: any) => {
+export const fetchAllCarsAsync = () => async (dispatch: AppDispatch) => {
     try {
         const cars: CarPropsType[] = await AsyncRaceAPI.getCars();
         dispatch(fetchAllCars({cars}));

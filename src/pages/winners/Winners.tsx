@@ -13,7 +13,6 @@ const Winners = () => {
     const [orderTime, setOrderTime] = useState('');
     const dispatch = useAppDispatch();
     const {
-        winners,
         currentPage
     } = useAppSelector(state => state.winners);
     const selectCars = (state: RootStateType) => state.garage.cars;
@@ -25,7 +24,7 @@ const Winners = () => {
     const selectWinnerTable = createSelector(
         selectWinners,
         selectCars,
-        (winners, cars) => {
+        (winners) => {
             return winners.map(winner => ({
                 ...winner,
                 name: selectCar(state, winner.id!)?.name || '',

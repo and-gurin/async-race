@@ -16,26 +16,22 @@ export const pureChange = (order: string, down: string, up: string) => {
 
 const CustomSort: React.FC<CustomSortPropsType> = (
     {
-        order, onChange,
+        order,
+        onChange,
     }
 ) => {
     const up = 'ASC';
     const down = 'DESC';
-
     const onChangeCallback = () => {
         onChange(pureChange(order, down, up))
     }
-
-    const icon = order === down
-        ? downIcon
-        : upIcon
+    const icon = order === down ? downIcon : upIcon
 
     return (
         <span
             onClick={onChangeCallback}
             style={{display: 'inline-block', paddingLeft: '5px'}}
         >
-
             <img
                 src={icon}
                 alt='sort icon'

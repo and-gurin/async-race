@@ -8,13 +8,6 @@ export type WinnerPropsType = {
     wins: number;
     time: number;
 }
-export type WinnerTablePropsType = {
-    id: number;
-    time: number;
-    wins: number;
-    name: string;
-    color: string;
-}
 export const AsyncRaceAPI = {
     baseUrl: 'http://localhost:3000',
     getCar(id: number) {
