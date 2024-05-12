@@ -72,7 +72,7 @@ const Garage = () => {
     const onClickStartAllCar = async () => {
         setStartedStoppedStatus('started');
         setTimeout(() => dispatch(sortCurrentRaceParticipants()),18000)
-        setTimeout(() => setIsPopupOpen(true), 23000);
+        setTimeout(() => setIsPopupOpen(true), 19000);
     }
 
     useEffect(() => {
