@@ -1,6 +1,6 @@
 # Andrey Hurynovich's async-race project
 
-[https://and-gurin.github.io/async-race/#/garage]().
+[https://and-gurin.github.io/async-race]().
 
 ## Project's checklist
 
