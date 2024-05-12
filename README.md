@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Andrey Hurynovich's async-race project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[https://and-gurin.github.io/async-race/#/garage]().
 
 ## Project's checklist
 
